@@ -2,38 +2,97 @@
 <html>
 <head>
   <title>Detector de Cores</title>
+
   <style>
     body {
       text-align: center;
-      font-family: Arial;
-      background: #111;
-      color: white;
+      font-family: "Georgia", serif;
+      background: linear-gradient(180deg, #ffe4ec, #fff0f5);
+      color: #5a3e4d;
+      overflow-x: hidden;
+      transition: background 0.5s;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-top: 20px;
+      animation: fadeIn 1.5s ease;
+    }
+
+    p {
+      font-style: italic;
+      color: #a6788c;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       font-size: 16px;
-      background: #00ffcc;
+      background: #ffb6c1;
       border: none;
-      border-radius: 8px;
+      border-radius: 20px;
       cursor: pointer;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff8fab;
+      transform: scale(1.05);
+    }
+
+    canvas {
+      border-radius: 20px;
+      border: 3px solid #ffc0cb;
+      margin-top: 15px;
     }
 
     #resultado {
-      font-size: 24px;
+      font-size: 22px;
       margin-top: 20px;
+      background: white;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 2s ease;
     }
+
+    /* sparkles */
+    .sparkle {
+      position: fixed;
+      color: #ffc0cb;
+      font-size: 20px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); opacity: 1; }
+      to { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
+
 <body>
 
-  <h1>Detector de Cores 🎨</h1>
-  <p>Mostre vermelho, azul ou verde para a câmera</p>
+  <h1>🎀 Detector de Cores 🎀</h1>
+  <p>mostre vermelho, azul ou verde para a câmera ♡</p>
 
-  <button onclick="init()">Iniciar</button>
+  <button onclick="startAll()">iniciar ✨</button>
 
   <div id="webcam-container"></div>
-  <div id="resultado"></div>
+  <div id="resultado">aguardando...</div>
+
+  <!-- música -->
+  <audio id="musica" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/03/27/audio_6f0a7a5e59.mp3" type="audio/mp3">
+  </audio>
 
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
@@ -41,6 +100,12 @@
     const URL = "https://teachablemachine.withgoogle.com/models/ClAQCeGsW/";
 
     let model, webcam;
+
+    async function startAll() {
+      document.getElementById("musica").play();
+      init();
+      gerarSparkles();
+    }
 
     async function init() {
       const modelURL = URL + "model.json";
@@ -71,7 +136,29 @@
       );
 
       document.getElementById("resultado").innerHTML =
-        "Cor detectada: <strong>" + maior.className + "</strong>";
+        "cor detectada: <strong>" + maior.className + "</strong> 💕";
+
+      // muda o fundo conforme a cor
+      if (maior.className.toLowerCase().includes("vermelho")) {
+        document.body.style.background = "linear-gradient(180deg, #ffb3ba, #ffe4e1)";
+      } else if (maior.className.toLowerCase().includes("azul")) {
+        document.body.style.background = "linear-gradient(180deg, #bae1ff, #e6f7ff)";
+      } else if (maior.className.toLowerCase().includes("verde")) {
+        document.body.style.background = "linear-gradient(180deg, #baffc9, #eaffea)";
+      }
+    }
+
+    function gerarSparkles() {
+      setInterval(() => {
+        const sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        sparkle.innerHTML = "✨";
+        sparkle.style.left = Math.random() * 100 + "vw";
+        sparkle.style.fontSize = (Math.random() * 10 + 15) + "px";
+        document.body.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 5000);
+      }, 300);
     }
   </script>
 
